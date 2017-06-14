@@ -6,22 +6,41 @@
     android:layout_height="match_parent"
     tools:context="timelog.android.ninjo.de.timelog.TimeLogActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="wrap_content"
+            android:forceHasOverlappingRendering="false"
+            android:theme="@style/AppTheme">
 
-    </android.support.design.widget.AppBarLayout>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:forceHasOverlappingRendering="false"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    <include layout="@layout/content_time_log"
-        android:id="@+id/include" />
+        </android.support.design.widget.AppBarLayout>
+
+        <ListView
+            android:id="@+id/loglist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray"
+            android:divider="@android:drawable/divider_horizontal_textfield"></ListView>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@android:drawable/ic_dialog_email" />
+
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -31,10 +50,5 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@android:drawable/ic_dialog_email" />
 
 </android.support.design.widget.CoordinatorLayout>
