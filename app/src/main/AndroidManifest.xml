@@ -19,6 +19,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".provider.LogProvider"
+            android:authorities="timelog.android.ninjo.de.timelog.provider"
+            android:exported="false">
+        </provider>
     </application>
 
 </manifest>
