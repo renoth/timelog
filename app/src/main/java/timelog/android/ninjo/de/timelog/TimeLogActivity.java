@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,17 +37,11 @@ public class TimeLogActivity extends AppCompatActivity implements LoaderManager.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.i("test", "Loading app");
+
         setContentView(R.layout.activity_time_log);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("test");
-        arrayList.add("test 2");
-        arrayList.add("test 3");
-        arrayList.add("test 4");
-        arrayList.add("test 5");
-        arrayList.add("test 6");
-        arrayList.add("test 7");
 
         logList = (ListView) findViewById(R.id.loglist);
 
