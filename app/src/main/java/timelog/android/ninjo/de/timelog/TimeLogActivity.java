@@ -1,9 +1,11 @@
 package timelog.android.ninjo.de.timelog;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,13 +22,19 @@ import android.widget.SimpleCursorAdapter;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 
+import java.util.Date;
+
 import okhttp3.OkHttpClient;
 import timelog.android.ninjo.de.timelog.database.LogHelper;
+import timelog.android.ninjo.de.timelog.domain.LogCategory;
+import timelog.android.ninjo.de.timelog.domain.LogEvent;
 import timelog.android.ninjo.de.timelog.provider.LogProvider;
 
 public class TimeLogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private CursorAdapter adapter;
+    private LogEvent logEvent;
+    private LogHelper logHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +52,10 @@ public class TimeLogActivity extends AppCompatActivity implements LoaderManager.
         int[] to = new int[] { R.id.log_list_label };
 
         getLoaderManager().initLoader(0, null, this);
-        adapter = new SimpleCursorAdapter(this, R.layout.log_list_content, null, from,
-                to, 0);
+
+        logHelper = new LogHelper(getApplicationContext());
+
+        adapter = new SimpleCursorAdapter(this, R.layout.log_list_content, logHelper.getAllRows(), from, to, 0);
 
         logList.setAdapter(adapter);
 
@@ -60,6 +70,8 @@ public class TimeLogActivity extends AppCompatActivity implements LoaderManager.
                 Snackbar.make(view, "Started logging", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
+                startNewLog();
+
                 fab_stop.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.INVISIBLE);
             }
@@ -71,6 +83,8 @@ public class TimeLogActivity extends AppCompatActivity implements LoaderManager.
                 Snackbar.make(view, "Stopped logging", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
+                stopAndSaveNewLogEvent();
+
                 fab_stop.setVisibility(View.INVISIBLE);
                 fab.setVisibility(View.VISIBLE);
             }
@@ -81,6 +95,35 @@ public class TimeLogActivity extends AppCompatActivity implements LoaderManager.
         new OkHttpClient.Builder()
                 .addNetworkInterceptor(new StethoInterceptor())
                 .build();
+    }
+
+    private void stopAndSaveNewLogEvent() {
+        Log.i("APP", "Saving new Event.");
+
+        logEvent.setEnd(new Date().getTime() + "");
+
+        LogHelper logHelper = new LogHelper(getApplicationContext());
+        SQLiteDatabase db = logHelper.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("log_start", logEvent.getStart());
+        contentValues.put("log_end", logEvent.getEnd());
+        contentValues.put("log_activity", logEvent.getCategory().toString());
+
+        db.insert(LogHelper.LOG_TABLE_NAME, null, contentValues);
+
+        adapter.swapCursor(logHelper.getAllRows());
+        adapter.notifyDataSetChanged();
+
+        Log.i("APP", "Saved new Event.");
+    }
+
+    private void startNewLog() {
+        Log.i("APP", "Starting new Event.");
+        logEvent = new LogEvent();
+        logEvent.setStart(new Date().getTime() + "");
+        logEvent.setCategory(LogCategory.COMPUTER);
     }
 
     @Override

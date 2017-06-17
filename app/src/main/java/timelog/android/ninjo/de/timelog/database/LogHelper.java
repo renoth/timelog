@@ -2,6 +2,7 @@ package timelog.android.ninjo.de.timelog.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -16,8 +17,6 @@ public class LogHelper extends SQLiteOpenHelper {
 
     public LogHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
-
-        context.deleteDatabase(DATABASE_NAME);
     }
 
     @Override
@@ -40,5 +39,23 @@ public class LogHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         //no upgrades yet
+    }
+
+    public void onDeleteAll() {
+        //TODO implement delete
+    }
+
+    public Cursor getAllRows() {
+        String query = "SELECT * FROM " + LOG_TABLE_NAME;
+
+        SQLiteDatabase database = this.getReadableDatabase();
+
+        Cursor cursor = database.rawQuery(query, null);
+
+        if(cursor != null){
+            cursor.moveToFirst();
+        }
+
+        return cursor;
     }
 }
