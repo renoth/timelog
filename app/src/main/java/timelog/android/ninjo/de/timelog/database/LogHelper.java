@@ -8,7 +8,7 @@ import android.util.Log;
 
 public class LogHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "logssss";
+    private static final String DATABASE_NAME = "log_entries";
     public static final String LOG_TABLE_NAME = "log_entry";
 
     public static final String ID_COLUMN = "_id";
@@ -16,21 +16,29 @@ public class LogHelper extends SQLiteOpenHelper {
 
     public LogHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
+
+        context.deleteDatabase(DATABASE_NAME);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE log_entry (" + ID_COLUMN + " integer primary key autoincrement,log_start TEXT, log_end TEXT, log_activity TEXT)");
+        sqLiteDatabase.execSQL("CREATE TABLE log_entry (" + ID_COLUMN + " integer primary key autoincrement, log_start TEXT, log_end TEXT, log_activity TEXT)");
+
         ContentValues initialValues = new ContentValues();
         initialValues.put("log_start", "start");
         initialValues.put("log_end", "end");
         initialValues.put("log_activity", "NOTHING");
-        Log.i("1.6", "gets to here");
+
+        Log.i("DATABASE", "inserted 1st row");
+        sqLiteDatabase.insert(LOG_TABLE_NAME, null, initialValues);
+
+        initialValues.put("log_activity", "LAMING");
+        Log.i("DATABASE", "inserted 2nd row");
         sqLiteDatabase.insert(LOG_TABLE_NAME, null, initialValues);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        //no upgrades yet
     }
 }

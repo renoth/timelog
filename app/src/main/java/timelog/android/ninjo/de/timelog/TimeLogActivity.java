@@ -1,7 +1,6 @@
 package timelog.android.ninjo.de.timelog;
 
 import android.app.LoaderManager;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
@@ -11,19 +10,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
-import android.widget.ResourceCursorAdapter;
 import android.widget.SimpleCursorAdapter;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-
-import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
 import timelog.android.ninjo.de.timelog.database.LogHelper;
@@ -31,7 +26,6 @@ import timelog.android.ninjo.de.timelog.provider.LogProvider;
 
 public class TimeLogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    private ListView logList;
     private CursorAdapter adapter;
 
     @Override
@@ -43,7 +37,7 @@ public class TimeLogActivity extends AppCompatActivity implements LoaderManager.
         setContentView(R.layout.activity_time_log);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        logList = (ListView) findViewById(R.id.loglist);
+        ListView logList = (ListView) findViewById(R.id.loglist);
 
         String[] from = new String[] { LogHelper.ID_COLUMN };
         // Fields on the UI to which we map
@@ -57,12 +51,28 @@ public class TimeLogActivity extends AppCompatActivity implements LoaderManager.
 
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab_stop = (FloatingActionButton) findViewById(R.id.fab_stop);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Started logging", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                fab_stop.setVisibility(View.VISIBLE);
+                fab.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        fab_stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Stopped logging", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+
+                fab_stop.setVisibility(View.INVISIBLE);
+                fab.setVisibility(View.VISIBLE);
             }
         });
 
