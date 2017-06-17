@@ -1,9 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/log_list_label"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:lineSpacingExtra="14sp"
     android:textSize="24sp">
 
-</TextView>
+    <TextView
+        android:id="@+id/type"
+        android:layout_width="197dp"
+        android:layout_height="35dp"
+        android:text="TextView"
+        android:gravity="center_vertical|left"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <TextView
+        android:id="@+id/duration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|end"
+        android:text="TextView"
+        android:textSize="18sp"
+        tools:layout_editor_absoluteX="225dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+</LinearLayout>

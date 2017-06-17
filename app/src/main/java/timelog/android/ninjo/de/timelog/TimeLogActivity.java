@@ -1,10 +1,6 @@
 package timelog.android.ninjo.de.timelog;
 
-import android.app.LoaderManager;
 import android.content.ContentValues;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -28,9 +24,8 @@ import okhttp3.OkHttpClient;
 import timelog.android.ninjo.de.timelog.database.LogHelper;
 import timelog.android.ninjo.de.timelog.domain.LogCategory;
 import timelog.android.ninjo.de.timelog.domain.LogEvent;
-import timelog.android.ninjo.de.timelog.provider.LogProvider;
 
-public class TimeLogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class TimeLogActivity extends AppCompatActivity {
 
     private CursorAdapter adapter;
     private LogEvent logEvent;
@@ -40,6 +35,8 @@ public class TimeLogActivity extends AppCompatActivity implements LoaderManager.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getApplicationContext().deleteDatabase(LogHelper.DATABASE_NAME);
+
         Log.i("test", "Loading app");
 
         setContentView(R.layout.activity_time_log);
@@ -47,16 +44,12 @@ public class TimeLogActivity extends AppCompatActivity implements LoaderManager.
 
         ListView logList = (ListView) findViewById(R.id.loglist);
 
-        String[] from = new String[] { LogHelper.ID_COLUMN };
-        // Fields on the UI to which we map
-        int[] to = new int[] { R.id.log_list_label };
-
-        getLoaderManager().initLoader(0, null, this);
+        String[] from = new String[] { LogHelper.DURATION_COLUMN, LogHelper.ACTIVITY_COLUMN };
+        int[] to = new int[] { R.id.duration, R.id.type };
 
         logHelper = new LogHelper(getApplicationContext());
 
         adapter = new SimpleCursorAdapter(this, R.layout.log_list_content, logHelper.getAllRows(), from, to, 0);
-
         logList.setAdapter(adapter);
 
         setSupportActionBar(toolbar);
@@ -110,6 +103,7 @@ public class TimeLogActivity extends AppCompatActivity implements LoaderManager.
         contentValues.put("log_start", logEvent.getStart());
         contentValues.put("log_end", logEvent.getEnd());
         contentValues.put("log_activity", logEvent.getCategory().toString());
+        contentValues.put(LogHelper.DURATION_COLUMN, logEvent.getDuration());
 
         db.insert(LogHelper.LOG_TABLE_NAME, null, contentValues);
 
@@ -146,22 +140,5 @@ public class TimeLogActivity extends AppCompatActivity implements LoaderManager.
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public Loader onCreateLoader(int i, Bundle bundle) {
-        String[] projection = { LogHelper.ID_COLUMN, LogHelper.ACTIVITY_COLUMN };
-        CursorLoader cursorLoader = new CursorLoader(this, LogProvider.CONTENT_URI, projection, null, null, null);
-        return cursorLoader;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        adapter.swapCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
     }
 }

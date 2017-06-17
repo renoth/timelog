@@ -9,10 +9,12 @@ import android.util.Log;
 
 public class LogHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "log_entries";
+    public static final String DATABASE_NAME = "log_entries";
     public static final String LOG_TABLE_NAME = "log_entry";
 
     public static final String ID_COLUMN = "_id";
+    public static final String DURATION_COLUMN = "duration";
+
     public static final String ACTIVITY_COLUMN = "log_activity";
 
     public LogHelper(Context context) {
@@ -21,19 +23,7 @@ public class LogHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE log_entry (" + ID_COLUMN + " integer primary key autoincrement, log_start TEXT, log_end TEXT, log_activity TEXT)");
-
-        ContentValues initialValues = new ContentValues();
-        initialValues.put("log_start", "start");
-        initialValues.put("log_end", "end");
-        initialValues.put("log_activity", "NOTHING");
-
-        Log.i("DATABASE", "inserted 1st row");
-        sqLiteDatabase.insert(LOG_TABLE_NAME, null, initialValues);
-
-        initialValues.put("log_activity", "LAMING");
-        Log.i("DATABASE", "inserted 2nd row");
-        sqLiteDatabase.insert(LOG_TABLE_NAME, null, initialValues);
+        sqLiteDatabase.execSQL("CREATE TABLE log_entry (" + ID_COLUMN + " integer primary key autoincrement, log_start TEXT, log_end TEXT, log_activity TEXT, duration TEXT)");
     }
 
     @Override

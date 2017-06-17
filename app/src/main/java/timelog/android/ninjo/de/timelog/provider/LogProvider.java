@@ -1,9 +1,7 @@
 package timelog.android.ninjo.de.timelog.provider;
 
 import android.content.ContentProvider;
-import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -13,19 +11,14 @@ import android.support.annotation.Nullable;
 
 import timelog.android.ninjo.de.timelog.database.LogHelper;
 
-
 public class LogProvider extends ContentProvider {
 
     private LogHelper database;
 
-    private static final String AUTHORITY = "timelog.android.ninjo.de.timelog.provider";
+    private static final String AUTHORITY = LogProvider.class.getPackage().toString();
 
     private static final String BASE_PATH = "logs";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
-
-    public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/logs";
-    public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/log";
-
 
     @Override
     public boolean onCreate() {
@@ -76,7 +69,7 @@ public class LogProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         SQLiteDatabase sqlDB = database.getWritableDatabase();
 
         int rowsUpdated = sqlDB.update(LogHelper.LOG_TABLE_NAME, values, selection, selectionArgs);
